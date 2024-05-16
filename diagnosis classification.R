@@ -1,6 +1,6 @@
 library(xgboost)
 library(readr)
-anemi <- read_csv("C:/Users/Desmer/Desktop/Çalışmalar/diagnosed_cbc_data_v4.csv")
+anemi <- read_csv("C:/./diagnosed_cbc_data_v4.csv")
 missing_anemi <- colSums(is.na(anemi))
 missing_anemi
 
