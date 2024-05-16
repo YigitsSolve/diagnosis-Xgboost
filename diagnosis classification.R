@@ -5,7 +5,7 @@ missing_anemi <- colSums(is.na(anemi))
 missing_anemi
 
 
-# Gerekli kütüphaneleri yükleyin
+# Gerekli kütüphaneleri yükleme
 library(ggplot2)
 library(gridExtra)
 
@@ -155,7 +155,7 @@ confusionMatrix(predicted_classes, testData$Diagnosis)
 ######################
 
 
-# Gerekli kütüphaneleri yükleyin
+# Gerekli kütüphaneleri yükleme
 library(readr)
 library(caret)
 library(xgboost)
@@ -163,13 +163,13 @@ library(ggplot2)
 library(gridExtra)
 library(dplyr)
 
-# Model sonuçlarınızı ve performans metriklerini saklayın
+# Model sonuçlarınızı ve performans metriklerini saklama
 accuracy <- 0.9821
 kappa <- 0.9656
 sensitivity <- c(Healthy = 0.9552, Iron_deficiency_anemia = 0.9730, Leukemia = 0.8889, Leukemia_with_thrombocytopenia = 1.0000, Macrocytic_anemia = 1.0000, Normocytic_hypochromic_anemia = 1.0000, Normocytic_normochromic_anemia = 0.9623, Other_microcytic_anemia = 1.0000, Thrombocytopenia = 1.0000)
 specificity <- c(Healthy = 0.9946, Iron_deficiency_anemia = 1.0000, Leukemia = 1.0000, Leukemia_with_thrombocytopenia = 0.9920, Macrocytic_anemia = 1.0000, Normocytic_hypochromic_anemia = 1.0000, Normocytic_normochromic_anemia = 1.0000, Other_microcytic_anemia = 0.9833, Thrombocytopenia = 1.0000)
 
-# Performans metriklerini veri çerçevesine dönüştürün
+# Performans metriklerini veri çerçevesine dönüştürme
 metrics_df <- data.frame(
   Class = names(sensitivity),
   Sensitivity = sensitivity,
@@ -203,7 +203,7 @@ accuracy_kappa_plot <- ggplot(accuracy_kappa_df, aes(x = Metric, y = Value)) +
   ylim(0, 1) +
   theme_minimal()
 
-# Grafikleri birleştirin
+# Grafikleri birleştirme
 combined_plot <- grid.arrange(sensitivity_plot, specificity_plot, accuracy_kappa_plot, ncol = 1)
 
 # Grafikleri ekrana bastırma
