@@ -10,7 +10,7 @@ library(ggplot2)
 library(gridExtra)
 
 
-# Her bir değişken için histogram oluşturma
+# Her bir değişken için histogram oluştur
 histogram_wbc <- ggplot(anemi, aes(x = WBC)) +
   geom_histogram(fill = "skyblue", color = "black") +
   labs(x = "WBC", y = "Frekans", title = "WBC Dağılımı") +
@@ -86,7 +86,7 @@ histogram_diagnosis <- ggplot(anemi, aes(x = Diagnosis)) +
   labs(x = "Diagnosis", y = "Frekans", title = "Diagnosis Dağılımı") +
   theme_minimal()
 
-# Histogramları birleştirme ve ekrana bastırma
+# Histogramları birleştirme ve ekrana bastır
 combined_plots <- grid.arrange(histogram_wbc, histogram_lymp, histogram_neutp, histogram_lymn,
                                histogram_neutn, histogram_rbc, histogram_hgb, histogram_hct,
                                histogram_mcv, histogram_mch, histogram_mchc, histogram_plt,
@@ -100,37 +100,37 @@ library(corrplot)
 # Sayısal değişkenlerin seçilmesi (korelasyon matrisi için)
 numeric_vars <- anemi[, sapply(anemi, is.numeric)]
 
-# Korelasyon matrisini hesaplama
+# Korelasyon matrisini hesapla
 cor_matrix <- cor(numeric_vars, use = "complete.obs")
 
-# Korelasyon matrisini görselleştirme
+# Korelasyon matrisini görselleştir
 corrplot(cor_matrix, method = "color", type = "upper", tl.col = "black", tl.srt = 45, 
          addCoef.col = "black", number.cex = 0.7, col = colorRampPalette(c("blue", "white", "red"))(200),
          title = "Korelasyon Matrisi", mar = c(0, 0, 2, 0))
 
 anemi$Diagnosis
 
-# "Diagnosis" değişkenini faktör olarak ayarlama
+# "Diagnosis" değişkenini faktör olarak ayarla
 anemi$Diagnosis <- as.factor(anemi$Diagnosis)
 
-# Eğitim ve test veri setlerini oluşturma
+# Eğitim ve test veri setlerini oluştur
 set.seed(123)
 trainIndex <- createDataPartition(anemi$Diagnosis, p = 0.5, list = FALSE)
 trainData <- anemi[trainIndex, ]
 testData <- anemi[-trainIndex, ]
 
-# XGBoost'un veri formatına uygun hale getirme
+# XGBoost'un veri formatına uygun hale getir
 train_matrix <- xgb.DMatrix(data = as.matrix(trainData[, -which(names(trainData) == "Diagnosis")]), label = as.numeric(trainData$Diagnosis) - 1)
 test_matrix <- xgb.DMatrix(data = as.matrix(testData[, -which(names(testData) == "Diagnosis")]), label = as.numeric(testData$Diagnosis) - 1)
 
-# XGBoost parametrelerini ayarlama
+# XGBoost parametrelerini ayarla
 params <- list(
   objective = "multi:softprob",
   eval_metric = "mlogloss",
   num_class = length(levels(trainData$Diagnosis))
 )
 
-# XGBoost modelini eğitme
+# XGBoost modelini eğit
 xgb_model <- xgboost(
   params = params,
   data = train_matrix,
@@ -140,22 +140,22 @@ xgb_model <- xgboost(
 )
 
 
-# Test veri setinde tahminler yapma
+# Test veri setinde tahminler yap
 predictions <- predict(xgb_model, newdata = test_matrix)
 predictions <- matrix(predictions, ncol = length(levels(trainData$Diagnosis)), byrow = TRUE)
 predicted_classes <- max.col(predictions) - 1
 
-# Tahminleri ve gerçek değerleri faktör seviyeleriyle eşleştirme
+# Tahminleri ve gerçek değerleri faktör seviyeleriyle eşleştir
 predicted_classes <- factor(predicted_classes, levels = 0:(length(levels(trainData$Diagnosis)) - 1), labels = levels(trainData$Diagnosis))
 
-# Karışıklık matrisini oluşturma ve yazdırma
+# Karışıklık matrisini oluşturma ve yazdır
 confusionMatrix(predicted_classes, testData$Diagnosis)
 
 
 ######################
 
 
-# Gerekli kütüphaneleri yükleme
+# Gerekli kütüphaneleri yükle
 library(readr)
 library(caret)
 library(xgboost)
@@ -163,13 +163,13 @@ library(ggplot2)
 library(gridExtra)
 library(dplyr)
 
-# Model sonuçlarınızı ve performans metriklerini saklama
+# Model sonuçlarınızı ve performans metriklerini sakla
 accuracy <- 0.9821
 kappa <- 0.9656
 sensitivity <- c(Healthy = 0.9552, Iron_deficiency_anemia = 0.9730, Leukemia = 0.8889, Leukemia_with_thrombocytopenia = 1.0000, Macrocytic_anemia = 1.0000, Normocytic_hypochromic_anemia = 1.0000, Normocytic_normochromic_anemia = 0.9623, Other_microcytic_anemia = 1.0000, Thrombocytopenia = 1.0000)
 specificity <- c(Healthy = 0.9946, Iron_deficiency_anemia = 1.0000, Leukemia = 1.0000, Leukemia_with_thrombocytopenia = 0.9920, Macrocytic_anemia = 1.0000, Normocytic_hypochromic_anemia = 1.0000, Normocytic_normochromic_anemia = 1.0000, Other_microcytic_anemia = 0.9833, Thrombocytopenia = 1.0000)
 
-# Performans metriklerini veri çerçevesine dönüştürme
+# Performans metriklerini veri çerçevesine dönüştür
 metrics_df <- data.frame(
   Class = names(sensitivity),
   Sensitivity = sensitivity,
@@ -203,9 +203,9 @@ accuracy_kappa_plot <- ggplot(accuracy_kappa_df, aes(x = Metric, y = Value)) +
   ylim(0, 1) +
   theme_minimal()
 
-# Grafikleri birleştirme
+# Grafikleri birleştir
 combined_plot <- grid.arrange(sensitivity_plot, specificity_plot, accuracy_kappa_plot, ncol = 1)
 
-# Grafikleri ekrana bastırma
+# Grafikleri ekrana bastır
 print(combined_plot)
 
